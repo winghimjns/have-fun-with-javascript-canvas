@@ -3,6 +3,7 @@ import Point from "./Point";
 import Line from "./canvas/Line";
 import Image from "./canvas/Image";
 import CanvasObject from "./canvas/CanvasObject";
+import AnimatingObject from "./AnimatingObject";
 
 const isRunning = Symbol('isRunning');
 export default class CanvasGraph {
@@ -75,7 +76,7 @@ window.pause = () => this.pause();
 
     update() {
         if (!this[isRunning]) { return; }
-        window.requestAnimationFrame(() => window.requestAnimationFrame(this.update));
+        window.requestAnimationFrame(this.update);
         this.clearance();
         this.render();
         return this;
@@ -93,7 +94,6 @@ window.pause = () => this.pause();
 
     onCanvasResize() {
         this.renewCanvasSize();
-        Cache.clear();
     }
 
     renewCanvasSize() {
@@ -114,22 +114,22 @@ window.pause = () => this.pause();
         const {width, height} = this.canvas;
         const center = new Point(width >> 1, height >> 1) ;
 
-        const end = new Point(width, center.y);
-
         const image = Cache.remember('image', () => {
-            const image = new Image({
+            return new Image({
                 src: './img/small.svg',
                 center,
-                rotate: 180,
+                rotate: 30,
             });
-            return image;
         });
 
-        image.draw(context);
-        Cache.remember('firstLine', () => new Line({ from: center, to: end, lineWidth: 15 })).draw(context);
-
+        Cache.remember('imageAnimating', () => new AnimatingObject({
+            duration: 3000,
+        }, state => {
+            image.rotate = state * 360;
+            image.draw(context);
+            if (state === 1) { this.pause(); }
+        })).update();
 
         return this;
     }
 }
-window.rotateDegree = 180;

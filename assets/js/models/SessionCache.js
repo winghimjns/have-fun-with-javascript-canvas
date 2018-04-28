@@ -9,4 +9,8 @@ export default class SessionCache {
     static clear() {
         SessionCache.cacheSet = {};
     }
+
+    static drop(key) {
+        delete cacheSet[key];
+    }
 }
