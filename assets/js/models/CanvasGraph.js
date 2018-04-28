@@ -50,10 +50,13 @@ export default class CanvasGraph {
         this.node = node;
         this.canvas = canvas;
         this.context = context;
-window.pause = () => this.pause();
+
         // functions binding
         this.onCanvasResize = this.onCanvasResize.bind(this);
         this.update = this.update.bind(this);
+
+        // TODO : put this statement in a better place
+        canvas.addEventListener('click', () => Cache.clear());
     }
 
     /**
@@ -127,7 +130,6 @@ window.pause = () => this.pause();
         }, state => {
             image.rotate = state * 360;
             image.draw(context);
-            if (state === 1) { this.pause(); }
         })).update();
 
         return this;
