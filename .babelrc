@@ -1,0 +1,16 @@
+{
+  "presets": [
+    "es2015",
+    [
+      "env", {
+      "targets": {
+        "browsers": ["last 2 versions"]
+      }
+    }
+    ]
+  ],
+  "plugins": [
+    "transform-decorators-legacy",
+    "transform-class-properties"
+  ]
+}
