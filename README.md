@@ -11,5 +11,7 @@ https://winghimjns.cc/have-fun-with-javascript-canvas/
 Copyright reserve for the image artwork. 
 
 Wing Him Liu
+
 2018-04-28
+
 (last update 2018-04-29)
