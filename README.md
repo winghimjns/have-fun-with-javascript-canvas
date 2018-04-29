@@ -1,6 +1,6 @@
 # Have some fun with JavaScript Canvas
 
-簡單嚟講，就係一個用canvas寫嘅簡單graphic，不過我無用code library，就咁寫 ¯\\_(ツ)_/¯
+簡單嚟講，就係一個用canvas寫嘅簡單graphic，不過我無用code library，就咁寫 ¯\\\_(ツ)_/¯
 
 當係整個小小練習畀自己。
 
