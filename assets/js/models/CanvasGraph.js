@@ -4,6 +4,7 @@ import Line from "./canvas/Line";
 import Image from "./canvas/Image";
 import CanvasObject from "./canvas/CanvasObject";
 import AnimatingObject from "./AnimatingObject";
+import Dot from "./canvas/Dot";
 
 const isRunning = Symbol('isRunning');
 export default class CanvasGraph {
@@ -131,19 +132,29 @@ export default class CanvasGraph {
         const {width, height} = this.canvas;
         const center = Cache.remember('canvasCenter', () => new Point(width >> 1, height >> 1));
 
-        const image = Cache.remember('image', () => new Image({
-            src: './img/small.svg',
-            center,
-            rotate: 30,
-        })).setCenter(center);
+        {
+            const image = Cache.remember('image', () => new Image({
+                src: './img/small.svg',
+                center,
+                rotate: 30,
+            })).setCenter(center);
 
-        Cache.remember('imageAnimating', () => new AnimatingObject({
-            duration: 3000,
-        }, function(state) {
-            image.rotate = state * 360;
-            image.draw(context);
-            if (state === 1) { this.restart(); }
-        })).update();
+            Cache.remember('imageAnimating', () => new AnimatingObject({
+                duration: 3000,
+            }, function(state) {
+                image.rotate = state * 360;
+                image.draw(context);
+                if (state === 1) { this.restart(); }
+            })).update();
+
+            new Dot({
+                center: new Point(width * .2, height * .8),
+                color: '#000000',
+                radius: 20,
+            }).draw(context);
+
+        }
+
 
         return this;
     }

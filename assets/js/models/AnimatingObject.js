@@ -14,7 +14,7 @@ export default class AnimatingObject {
         this.startedTime = props.startedTime || (+(new Date()));
         this.duration = props.duration || 1000;
         this.easingFunction = props.easingFunction || easing.easeInOutQuad;
-        this.callback = callback;
+        this.callback = callback.bind(this);
     }
 
     restart() {
@@ -25,6 +25,6 @@ export default class AnimatingObject {
         const {startedTime, duration, easingFunction, callback} = this;
         const now = (+(new Date()));
         const nowPassed = Math.min((now - startedTime) / duration, 1);
-        return callback.bind(this)(nowPassed !== 1 ? easingFunction(nowPassed) : 1);
+        return callback(nowPassed !== 1 ? easingFunction(nowPassed) : 1);
     }
 }
