@@ -142,7 +142,7 @@ export default class CanvasGraph {
         }, function(state) {
             image.rotate = state * 360;
             image.draw(context);
-            if (state === 1) { this.reset(); }
+            if (state === 1) { this.restart(); }
         })).update();
 
         return this;

@@ -17,7 +17,7 @@ export default class AnimatingObject {
         this.callback = callback;
     }
 
-    reset() {
+    restart() {
         this.startedTime = (+(new Date()));
     }
 
