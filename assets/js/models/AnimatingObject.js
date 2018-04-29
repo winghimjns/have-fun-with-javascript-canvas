@@ -17,10 +17,14 @@ export default class AnimatingObject {
         this.callback = callback;
     }
 
+    reset() {
+        this.startedTime = (+(new Date()));
+    }
+
     update() {
         const {startedTime, duration, easingFunction, callback} = this;
         const now = (+(new Date()));
         const nowPassed = Math.min((now - startedTime) / duration, 1);
-        return callback(nowPassed !== 1 ? easingFunction(nowPassed) : 1);
+        return callback.bind(this)(nowPassed !== 1 ? easingFunction(nowPassed) : 1);
     }
 }

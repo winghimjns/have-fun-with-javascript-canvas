@@ -6,11 +6,15 @@ export default class SessionCache {
         return SessionCache.cacheSet[key] || (SessionCache.cacheSet[key] = generator());
     }
 
+    static get(key, defaultValue = null) {
+        return SessionCache.cacheSet(key) || defaultValue || null;
+    }
+
     static clear() {
         SessionCache.cacheSet = {};
     }
 
     static drop(key) {
-        delete cacheSet[key];
+        delete SessionCache.cacheSet[key];
     }
 }

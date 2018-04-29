@@ -28,5 +28,12 @@ export default class Image extends CanvasObject {
         context.drawImage(image, rotatedCenter.x - (image.width >> 1), rotatedCenter.y - (image.height >> 1));
         context.restore();
     }
+
+    setCenter(center) {
+        if (this.center !== center) {
+            this.center = center;
+        }
+        return this;
+    }
 };
 

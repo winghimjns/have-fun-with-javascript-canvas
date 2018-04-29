@@ -66,6 +66,7 @@ export default class CanvasGraph {
     start() {
         this.renewCanvasSize();
         this[isRunning] = true;
+        this.initialize();
         this.update();
         this.subscribeWindowResize();
         return this;
@@ -75,6 +76,10 @@ export default class CanvasGraph {
         this[isRunning] = false;
         this.unsubscribeWindowResize();
         return this;
+    }
+
+    end() {
+        this.uninitialize();
     }
 
     update() {
@@ -97,6 +102,7 @@ export default class CanvasGraph {
 
     onCanvasResize() {
         this.renewCanvasSize();
+        Cache.drop('canvasCenter');
     }
 
     renewCanvasSize() {
@@ -112,24 +118,31 @@ export default class CanvasGraph {
         context.clearRect(0, 0, width, height);
     }
 
+    initialize() {
+
+    }
+
+    uninitialize() {
+
+    }
+
     render() {
         const {canvas, context} = this;
         const {width, height} = this.canvas;
-        const center = new Point(width >> 1, height >> 1) ;
+        const center = Cache.remember('canvasCenter', () => new Point(width >> 1, height >> 1));
 
-        const image = Cache.remember('image', () => {
-            return new Image({
-                src: './img/small.svg',
-                center,
-                rotate: 30,
-            });
-        });
+        const image = Cache.remember('image', () => new Image({
+            src: './img/small.svg',
+            center,
+            rotate: 30,
+        })).setCenter(center);
 
         Cache.remember('imageAnimating', () => new AnimatingObject({
             duration: 3000,
-        }, state => {
+        }, function(state) {
             image.rotate = state * 360;
             image.draw(context);
+            if (state === 1) { this.reset(); }
         })).update();
 
         return this;
