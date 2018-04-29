@@ -4,6 +4,9 @@
 
 當係整個小小練習畀自己。
 
+###Demo
+https://winghimjns.cc/have-fun-with-javascript-canvas/
+
 我會保留呢個repository所用嘅圖片嘅版權。
 Copyright reserve for the image artwork. 
 
