@@ -5,7 +5,7 @@ export default class CanvasObject {
 
     static rotatePoint(point, rotate) {
 
-        // 不's law
+        // pythagorean theorem
         const distance = Math.sqrt(point.x * point.x + point.y * point.y);
 
         // calculate the degree with tangen

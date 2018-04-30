@@ -1,8 +1,20 @@
+import {isNull} from "lodash";
 export default class SessionCache {
 
     static cacheSet = {};
 
-    static remember(key, generator) {
+    static group = {};
+
+    static remember(key, generator, groupKey = null) {
+
+        // groupping function
+        if (!isNull(groupKey)) {
+            if (!SessionCache.group.hasOwnProperty(groupKey)) {
+                SessionCache.group[groupKey] = [];
+            }
+            SessionCache.group[groupKey].push(key);
+        }
+
         return SessionCache.cacheSet[key] || (SessionCache.cacheSet[key] = generator());
     }
 
@@ -16,5 +28,13 @@ export default class SessionCache {
 
     static drop(key) {
         delete SessionCache.cacheSet[key];
+    }
+
+    static dropGroup(group) {
+        if (SessionCache.group.hasOwnProperty(group)) {
+            SessionCache.group[group].map(key => {
+                delete SessionCache.cacheSet[key];
+            });
+        }
     }
 }

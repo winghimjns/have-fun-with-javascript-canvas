@@ -5,6 +5,7 @@ import Image from "./canvas/Image";
 import CanvasObject from "./canvas/CanvasObject";
 import AnimatingObject from "./AnimatingObject";
 import Dot from "./canvas/Dot";
+import distance from "../utils/distance";
 
 const isRunning = Symbol('isRunning');
 export default class CanvasGraph {
@@ -103,7 +104,7 @@ export default class CanvasGraph {
 
     onCanvasResize() {
         this.renewCanvasSize();
-        Cache.drop('canvasCenter');
+        Cache.dropGroup('dropOnResize');
     }
 
     renewCanvasSize() {
@@ -130,7 +131,7 @@ export default class CanvasGraph {
     render() {
         const {canvas, context} = this;
         const {width, height} = this.canvas;
-        const center = Cache.remember('canvasCenter', () => new Point(width >> 1, height >> 1));
+        const center = Cache.remember('canvasCenter', () => new Point(width >> 1, height >> 1), 'dropOnResize');
 
         {
             const image = Cache.remember('image', () => new Image({
@@ -147,8 +148,21 @@ export default class CanvasGraph {
                 if (state === 1) { this.restart(); }
             })).update();
 
+            const rotatorDistance = Cache.remember('rotatorDistance', () => {
+                return distance(center, new Point(width * .2, height * .8));
+            }, 'dropOnResize');
+
+            const firstRotateCenterPoint = Cache.remember('firstRotateCenterPoint', () => {
+                const distance = Math.sqrt((rotatorDistance * rotatorDistance) >> 1);
+                return center.move(-distance, -distance);
+            }, 'dropOnResize');
+
+
+
+
+
             new Dot({
-                center: new Point(width * .2, height * .8),
+                center: firstRotateCenterPoint,
                 color: '#000000',
                 radius: 20,
             }).draw(context);
