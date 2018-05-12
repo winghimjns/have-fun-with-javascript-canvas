@@ -22,9 +22,13 @@ export default class AnimatingObject {
     }
 
     update() {
+        return callback(this.getState());
+    }
+
+    getState() {
         const {startedTime, duration, easingFunction, callback} = this;
         const now = (+(new Date()));
         const nowPassed = Math.min((now - startedTime) / duration, 1);
-        return callback(nowPassed !== 1 ? easingFunction(nowPassed) : 1);
+        return nowPassed !== 1 ? easingFunction(nowPassed) : 1;
     }
 }

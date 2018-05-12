@@ -152,22 +152,38 @@ export default class CanvasGraph {
         ]));
 
         rotateCenterPoints.map((point, index) => {
+
             new Dot({
                 center: point,
                 color: '#0000ff',
                 radius: 20,
             }).draw(context);
 
+            const image = Cache.remember(`image${index}`, () => {
+                return new Image({
+                    src: './img/small.svg',
+                    center,
+                    rotate: 30,
+                });
+            }, 'dropOnResize');
 
+            const imageAnimating = Cache.remember(`imageAnimating${index}`, () => new AnimatingObject({
+                duration: 3000,
+                easingFunction: t=>t,
+            }, function(state) {
+                const imageRotate = state * 360 * 2;
+                const imageCenter = twoPointsRotate(point, center, state * 90);
+                image.setCenter(imageCenter).setRotate(imageRotate).draw(context);
+                if (state >= 1) { this.restart(); }
+            })).update();
 
         });
 
-
-        const image = Cache.remember('image', () => new Image({
-            src: './img/small.svg',
-            center,
-            rotate: 30,
-        })).setCenter(center);
+        // const image = Cache.remember('image', () => new Image({
+        //     src: './img/small.svg',
+        //     center,
+        //     rotate: 30,
+        // })).setCenter(center);
 
         // Cache.remember('imageRotating', () => new AnimatingObject({
         //     duration: 3000,

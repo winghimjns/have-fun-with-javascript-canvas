@@ -27,6 +27,7 @@ export default class Image extends CanvasObject {
         const rotatedCenter = CanvasObject.rotatePoint(center, rotate);
         context.drawImage(image, rotatedCenter.x - (image.width >> 1), rotatedCenter.y - (image.height >> 1));
         context.restore();
+        return this;
     }
 
     setCenter(center) {
@@ -35,5 +36,7 @@ export default class Image extends CanvasObject {
         }
         return this;
     }
+    
+    setRotate(rotate) { this.rotate = rotate; return this; }
 };
 
