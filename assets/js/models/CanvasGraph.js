@@ -6,6 +6,7 @@ import CanvasObject from "./canvas/CanvasObject";
 import AnimatingObject from "./AnimatingObject";
 import Dot from "./canvas/Dot";
 import distance from "../utils/distance";
+import twoPointsRotate from "../utils/twoPointsRotate";
 
 const isRunning = Symbol('isRunning');
 export default class CanvasGraph {
@@ -131,43 +132,66 @@ export default class CanvasGraph {
     render() {
         const {canvas, context} = this;
         const {width, height} = this.canvas;
+
         const center = Cache.remember('canvasCenter', () => new Point(width >> 1, height >> 1), 'dropOnResize');
 
-        {
-            const image = Cache.remember('image', () => new Image({
-                src: './img/small.svg',
-                center,
-                rotate: 30,
-            })).setCenter(center);
+        const rotatorDistance = Cache.remember('rotatorDistance', () => {
+            return distance(center, new Point(width * .2, height * .8));
+        }, 'dropOnResize');
 
-            Cache.remember('imageAnimating', () => new AnimatingObject({
-                duration: 3000,
-            }, function(state) {
-                image.rotate = state * 360;
-                image.draw(context);
-                if (state === 1) { this.restart(); }
-            })).update();
+        const rotateCenterPointDistance = Cache.remember('rotateCenterPointDistance', () => {
+            return Math.sqrt((rotatorDistance * rotatorDistance) >> 1);
+        }, 'dropOnResize');
 
-            const rotatorDistance = Cache.remember('rotatorDistance', () => {
-                return distance(center, new Point(width * .2, height * .8));
-            }, 'dropOnResize');
+        const firstRotateCenterPoint = Cache.remember('firstRotateCenterPoint', () => center.move(-rotateCenterPointDistance, -rotateCenterPointDistance));
 
-            const firstRotateCenterPoint = Cache.remember('firstRotateCenterPoint', () => {
-                const distance = Math.sqrt((rotatorDistance * rotatorDistance) >> 1);
-                return center.move(-distance, -distance);
-            }, 'dropOnResize');
+        const rotateCenterPoints = Cache.remember('rotateCenterPoints', () => ([
+            firstRotateCenterPoint, twoPointsRotate(center, firstRotateCenterPoint, 45), twoPointsRotate(center, firstRotateCenterPoint, 90),
+            twoPointsRotate(center, firstRotateCenterPoint, 135), twoPointsRotate(center, firstRotateCenterPoint, 180), twoPointsRotate(center, firstRotateCenterPoint, 225),
+            twoPointsRotate(center, firstRotateCenterPoint, 270), twoPointsRotate(center, firstRotateCenterPoint, 315),
+        ]));
 
-
-
-
-
+        rotateCenterPoints.map((point, index) => {
             new Dot({
-                center: firstRotateCenterPoint,
-                color: '#000000',
+                center: point,
+                color: '#0000ff',
                 radius: 20,
             }).draw(context);
 
-        }
+
+
+        });
+
+
+        const image = Cache.remember('image', () => new Image({
+            src: './img/small.svg',
+            center,
+            rotate: 30,
+        })).setCenter(center);
+
+        // Cache.remember('imageRotating', () => new AnimatingObject({
+        //     duration: 3000,
+        // }, function(state) {
+        //     image.rotate = state * 360 * 2;
+        //     const imageCenter = twoPointsRotate(firstRotateCenterPoint, center, state * -90);
+        //     image.setCenter(imageCenter);
+        //     image.draw(context);
+        //     if (state === 1) { this.restart(); }
+        // })).update();
+
+        // new Dot({
+        //     center: firstRotateCenterPoint,
+        //     color: '#000000',
+        //     radius: 20,
+        // }).draw(context);
+
+        new Dot({
+            center: center,
+            color: '#ff0000',
+            radius: 20,
+        }).draw(context);
+
+
 
 
         return this;
